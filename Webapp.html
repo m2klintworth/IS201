@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guessing Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f4f4f9;
+            margin: 0;
+        }
+        h1 {
+            color: #333;
+        }
+        .container {
+            text-align: center;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        input[type="number"] {
+            width: 50px;
+            padding: 5px;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .scoreboard {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        .message {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #d9534f;
+        }
+        .win-message {
+            color: #5bc0de;
+        }
+        .play-again {
+            background-color: #007bff;
+        }
+        .play-again:hover {
+            background-color: #0069d9;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Guessing Game</h1>
+        <p>Guess a number between 1 and 5:</p>
+        <input type="number" id="userInput" min="1" max="5" required>
+        <button onclick="playGame()">Submit Guess</button>
+
+        <div class="scoreboard">
+            <p>User Score: <span id="userScore">0</span></p>
+            <p>Computer Score: <span id="computerScore">0</span></p>
+        </div>
+
+        <div class="message" id="message"></div>
+        
+        <!-- Play Again button -->
+        <button id="playAgainBtn" class="play-again" onclick="playAgain()" style="display: none;">Play Again</button>
+    </div>
+
+    <script>
+        let userScore = 0;
+        let computerScore = 0;
+        let gameOver = false;
+
+        function playGame() {
+            if (gameOver) return;
+
+            const userInput = parseInt(document.getElementById('userInput').value);
+            const computerNumber = Math.floor(Math.random() * 5) + 1;
+            let message = '';
+
+            if (userInput === computerNumber) {
+                userScore += 1;
+                message = `Correct! You guessed ${computerNumber}. You get 1 point.`;
+            } else if (Math.abs(userInput - computerNumber) === 1) {
+                userScore += 0.5;
+                message = `Close! The number was ${computerNumber}. You get 0.5 points.`;
+            } else {
+                computerScore += 1;
+                message = `Wrong! The number was ${computerNumber}. Computer gets 1 point.`;
+            }
+
+            document.getElementById('userScore').textContent = userScore.toFixed(1);
+            document.getElementById('computerScore').textContent = computerScore;
+
+            if (userScore >= 3) {
+                gameOver = true;
+                document.getElementById('message').textContent = "Congratulations! You win!";
+                document.getElementById('message').classList.add('win-message');
+                document.getElementById('playAgainBtn').style.display = 'inline-block';
+            } else if (computerScore >= 3) {
+                gameOver = true;
+                document.getElementById('message').textContent = "Game Over! Computer wins.";
+                document.getElementById('playAgainBtn').style.display = 'inline-block';
+            } else {
+                document.getElementById('message').textContent = message;
+            }
+        }
+
+        function playAgain() {
+            // Reset the game variables
+            userScore = 0;
+            computerScore = 0;
+            gameOver = false;
+
+            // Update the scores in the UI
+            document.getElementById('userScore').textContent = userScore;
+            document.getElementById('computerScore').textContent = computerScore;
+
+            // Hide the Play Again button and message
+            document.getElementById('message').textContent = '';
+            document.getElementById('playAgainBtn').style.display = 'none';
+        }
+    </script>
+
+</body>
+</html>
